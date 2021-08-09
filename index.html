@@ -12,6 +12,9 @@
                      overflow:hidden;"
          id="container"/>
     <script>
+        const badWords = ['ass', 'asshole', 'bastard', 'bitch', 'bullshit', 'cocksucker', 'crap', 'cunt', 'damn', 'fuck', 'fucker', 'fucking', 'goddamn',
+            'hell', 'horseshit', 'motherfucker', 'motherfucking',  'nigga', 'nigger', 'piss', 'shit', 'shitass', 'slut'];
+
         window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
         let finalTranscript = '';
         let recognition = new window.SpeechRecognition();
@@ -23,11 +26,14 @@
         recognition.onresult = (event) => {
             let interimTranscript = '';
             for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-                let transcript = event.results[i][0].transcript;
+                let transcript = (event.results[i][0].transcript);
+                const words = transcript.split(" ");
+                const filteredWords = words.filter(word => !badWords.includes(word.toLowerCase()));
+              
                 if (event.results[i].isFinal) {
-                    finalTranscript += transcript;
+                    finalTranscript += filteredWords.join(' ');
                 } else {
-                    interimTranscript += transcript;
+                    interimTranscript += filteredWords.join(' ');
                 }
             }
 
